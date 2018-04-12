@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Online spelling test</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-34155038-14"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-34155038-14');
+</script>
+
+</head>
+
+<script>
+var otext,sizearray,choosenword;
+
+$(document).ready(function(){
+showhidetheword();hidesuccess();hidefailed();
+});
+      function readthelist()
+      {
+        $.get("https://raw.githubusercontent.com/first20hours/google-10000-english/master/google-10000-english-no-swears.txt", function(data, status){
+          //  alert("Data: " + data + "\nStatus: " + status);
+          document.getElementById("load").style.display = "none";
+          window.otext = data.split('\n');
+          window.sizearray=otext.length;
+          hidesuccess();hidefailed();hideans();
+          loadwordtoguess();
+          //document.getElementById("loadwordsv").style.display = "none";
+
+        });
+      }
+
+///});
+
+function spellword(word){
+
+var msg = new SpeechSynthesisUtterance(word);
+window.speechSynthesis.speak(msg);
+
+}
+
+function loadwordtoguess(){
+hidesuccess();hidefailed();hideans();
+randomn=Math.floor(Math.random() * window.sizearray);
+window.choosenword=window.otext[randomn];
+document.getElementById("wordtoguessv").innerHTML=choosenword;
+readtheword();
+//spellword(choosenword);
+}
+
+function readtheword()
+{
+  //choosenwordtoread= document.getElementById("wordtoguessv").innerHTML;
+  spellword(window.choosenword);
+}
+
+function showhidetheword()
+{
+  var x = document.getElementById("wordtoguessv");
+  if (x.style.display === "none") {
+      x.style.display = "block";
+  } else {
+      x.style.display = "none";
+  }
+}
+
+function hideans()
+{
+  var x = document.getElementById("wordtoguessv");
+  x.style.display = "none";
+}
+function showsuccess()
+{
+  document.getElementById("success").style.display = "block";
+}
+function hidesuccess()
+{
+  document.getElementById("success").style.display = "none";
+}
+function showfailed()
+{
+  document.getElementById("failed").style.display = "block";
+}
+function hidefailed()
+{
+  document.getElementById("failed").style.display = "none";
+}
+
+function check()
+{
+var w=document.getElementById("wordtoguessv").innerHTML;
+var ans=document.getElementById("ans").value;
+ans=ans.toLowerCase();
+if(w==ans){showsuccess();}else{showfailed();}
+}
+</script>
+
+
+<center>
+<div class="container">
+<h2>Online spelling test</h2>
+<br/>
+<br/>
+<button class="btn btn-default" onclick="readthelist()" id='load'>Load the common words list and start</button>
+<span class="alert alert-info" id='wordtoguessv'></span>
+<span class="alert alert-success" id='success'>Good job - right answer</span>
+<span class="alert alert-danger" id='failed'>Wrong answer</span>
+
+<br/>
+<br/>
+<button class="btn btn-default" id='load' onclick="loadwordtoguess()">guess another word</button>
+<br/>
+<br/>
+<button class="btn btn-default" id='load' onclick="readtheword()">Read the word again</button>
+<br/>
+<br/>
+<button class="btn btn-default" id='load' onclick="showhidetheword()">Show/hide the word</button>
+<br/>
+<br/>
+<input type='text' class="form-control" id="ans" placeholder="type here the word after you listen to it">
+<br/>
+<button class="btn btn-default" id='load' onclick="check()">Check the word</button>
+
+<br/>
+</div>
+</center>
+</html>
